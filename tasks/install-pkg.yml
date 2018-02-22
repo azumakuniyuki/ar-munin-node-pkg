@@ -5,12 +5,20 @@
 # |_| |_| |_|\__,_|_| |_|_|_| |_|     |_| |_|\___/ \__,_|\___| || .__/|_|\_\__, | /_/   \__\__,_|___/_|\_\___/
 #                                                             \_\_|        |___/_/                            
 # install-pkg
+- name: install-pkg | EPEL repository should be installed
+  yum: name="epel-release" state="present"
+
 - name: install-pkg | Install munin-node
   when: ansible_os_family == "RedHat"
-  yum: name={{ item }} state=present
-  with_items: munin.node.packages.install
+  yum: name={{ item }} state=present enablerepo="epel"
+  with_items:
+    - "munin-node"
 
 - name: install-pkg | Install Perl modules
   cpanm: name={{ item }}
-  with_items: munin.node.modules.perl
+  with_items:
+    - "LWP::UserAgent"
+    - "IPC::Cmd"
+    - "JSON::Syck"
+    - "Net::CIDR"
 
