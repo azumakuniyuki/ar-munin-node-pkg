@@ -1,0 +1,16 @@
+#                        _                             _       __      _       __     ___            _        
+#  _ __ ___  _   _ _ __ (_)_ __        _ __   ___   __| | ___ / /_ __ | | ____ \ \   / / |_ __ _ ___| | _____ 
+# | '_ ` _ \| | | | '_ \| | '_ \ _____| '_ \ / _ \ / _` |/ _ \ || '_ \| |/ / _` | | / /| __/ _` / __| |/ / __|
+# | | | | | | |_| | | | | | | | |_____| | | | (_) | (_| |  __/ || |_) |   < (_| | |/ / | || (_| \__ \   <\__ \
+# |_| |_| |_|\__,_|_| |_|_|_| |_|     |_| |_|\___/ \__,_|\___| || .__/|_|\_\__, | /_/   \__\__,_|___/_|\_\___/
+#                                                             \_\_|        |___/_/                            
+# install-pkg
+- name: install-pkg | Install munin-node
+  when: ansible_os_family == "RedHat"
+  yum: name={{ item }} state=present
+  with_items: munin.node.packages.install
+
+- name: install-pkg | Install Perl modules
+  cpanm: name={{ item }}
+  with_items: munin.node.modules.perl
+
