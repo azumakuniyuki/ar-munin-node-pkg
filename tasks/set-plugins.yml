@@ -15,23 +15,23 @@
 - block:
     - name: set-plugins | Link munin-plugins(apache)
       notify: Restart munin-node
-      file: >
-        src=/usr/share/munin/plugins/{{ item }}
-        dest=/etc/munin/plugins/{{ item }}
-        state=link
+      file:
+        src:   "/usr/share/munin/plugins/{{ item }}"
+        dest:  "/etc/munin/plugins/{{ item }}"
+        state: "link"
       with_items:
-        - apache_accesses
-        - apache_processes
-        - apache_volume
+        - "apache_accesses"
+        - "apache_processes"
+        - "apache_volume"
 
     - name: set-plugins | Deploy /etc/munin/plugin-conf.d/apache
       notify: Restart munin-node
-      template: >
-        src=etc/munin/plugin-conf.d/{{ item }}.j2
-        dest=/etc/munin/plugin-conf.d/{{ item }}
-        backup=yes
+      template:
+        src:    "etc/munin/plugin-conf.d/{{ item }}.j2"
+        dest:   "/etc/munin/plugin-conf.d/{{ item }}"
+        backup: "yes"
       with_items:
-        - apache
+        - "apache"
   when: munin.node.plugins.apache == True
 
 #  ____  
@@ -44,22 +44,22 @@
 - block:
     - name: set-plugins | Link munin-plugins(bind9)
       notify: Restart munin-node
-      file: >
-        src=/usr/share/munin/plugins/{{ item }}
-        dest=/etc/munin/plugins/{{ item }}
-        state=link
+      file:
+        src:   "/usr/share/munin/plugins/{{ item }}"
+        dest:  "/etc/munin/plugins/{{ item }}"
+        state: "link"
       with_items:
-        - bind9
-        - bind9_rndc
+        - "bind9"
+        - "bind9_rndc"
 
     - name: set-plugins | Deploy /etc/munin/plugin-conf.d/bind9
       notify: Restart munin-node
-      template: >
-        src=etc/munin/plugin-conf.d/{{ item }}.j2
-        dest=/etc/munin/plugin-conf.d/{{ item }}
-        backup=yes
+      template:
+        src:    "etc/munin/plugin-conf.d/{{ item }}.j2"
+        dest:   "/etc/munin/plugin-conf.d/{{ item }}"
+        backup: "yes"
       with_items:
-        - bind9
+        - "bind9"
   when: munin.node.plugins.bind9 == True
 
 #  _   _ 
@@ -72,22 +72,22 @@
 - block:
     - name: set-plugins | Link munin-plugins(nginx)
       notify: Restart munin-node
-      file: >
-        src=/usr/share/munin/plugins/{{ item }}
-        dest=/etc/munin/plugins/{{ item }}
-        state=link
+      file:
+        src:   "/usr/share/munin/plugins/{{ item }}"
+        dest:  "/etc/munin/plugins/{{ item }}"
+        state: "link"
       with_items:
-        - nginx_request
-        - nginx_status
+        - "nginx_request"
+        - "nginx_status"
 
     - name: set-plugins | Deploy /etc/munin/plugin-conf.d/nginx
       notify: Restart munin-node
-      template: >
-        src=etc/munin/plugin-conf.d/{{ item }}.j2
-        dest=/etc/munin/plugin-conf.d/{{ item }}
-        backup=yes
+      template:
+        src:    "etc/munin/plugin-conf.d/{{ item }}.j2"
+        dest:   "/etc/munin/plugin-conf.d/{{ item }}"
+        backup: "yes"
       with_items:
-        - nginx
+        - "nginx"
   when: munin.node.plugins.nginx == True
 
 #  __  __ 
@@ -100,25 +100,25 @@
 - block:
     - name: set-plugins | Link munin-plugins(mysql)
       notify: Restart munin-node
-      file: >
-        src=/usr/share/munin/plugins/{{ item }}
-        dest=/etc/munin/plugins/{{ item }}
-        state=link
+      file:
+        src:   "/usr/share/munin/plugins/{{ item }}"
+        dest:  "/etc/munin/plugins/{{ item }}"
+        state: "link"
       with_items:
-        - mysql_bytes
-        - mysql_innodb
-        - mysql_queries
-        - mysql_slowqueries
-        - mysql_threads
+        - "mysql_bytes"
+        - "mysql_innodb"
+        - "mysql_queries"
+        - "mysql_slowqueries"
+        - "mysql_threads"
 
     - name: set-plugins | Deploy /etc/munin/plugin-conf.d/mysql
       notify: Restart munin-node
-      template: >
-        src=etc/munin/plugin-conf.d/{{ item }}.j2
-        dest=/etc/munin/plugin-conf.d/{{ item }}
-        backup=yes
+      template:
+        src:    "etc/munin/plugin-conf.d/{{ item }}.j2"
+        dest:   "/etc/munin/plugin-conf.d/{{ item }}"
+        backup: "yes"
       with_items:
-        - mysql
+        - "mysql"
   when: munin.node.plugins.mysql == True
 
 #  ____  
@@ -131,81 +131,82 @@
 - block:
     - name: set-plugins | git clone munin-plugins(pgpool)
       register: munin_pgpool
-      git: >
-        repo=git://github.com/azumakuniyuki/pgpool-plugins-for-munin.git
-        dest={{ buildroot }}/pgpool-plugins-for-munin
-        accept_hostkey=yes
+      git:
+        repo: "git://github.com/azumakuniyuki/pgpool-plugins-for-munin.git"
+        dest: "{{ buildroot }}/pgpool-plugins-for-munin"
+        accept_hostkey: "yes"
 
     - name: set-plugins | Install munin-plugins(pgpool)
       when: munin_pgpool.changed
       shell: >
-        chdir={{ buildroot }}/pgpool-plugins-for-munin
-        creates=/usr/share/munin/plugins/pgpool2_connections
         install -o root -m 0755 pgpool2_connections /usr/share/munin/plugins/
+      args:
+        chdir:   "{{ buildroot }}/pgpool-plugins-for-munin"
+        creates: "/usr/share/munin/plugins/pgpool2_connections"
 
     - name: set-plugins | Link munin-plugins(pgpool)
       notify: Restart munin-node
       when: munin_pgpool.changed
-      file: >
-        src=/usr/share/munin/plugins/pgpool2_connections
-        dest=/etc/munin/plugins/pgpool2_connections
-        state=link
+      file:
+        src:   "/usr/share/munin/plugins/pgpool2_connections"
+        dest:  "/etc/munin/plugins/pgpool2_connections"
+        state: "link"
 
     - name: set-plugins | Deploy /etc/munin/plugin-conf.d/pgpool
       notify: Restart munin-node
-      template: >
-        src=etc/munin/plugin-conf.d/{{ item }}.j2
-        dest=/etc/munin/plugin-conf.d/{{ item }}
-        backup=yes
+      template:
+        src:    "etc/munin/plugin-conf.d/{{ item }}.j2"
+        dest:   "/etc/munin/plugin-conf.d/{{ item }}"
+        backup: "yes"
       with_items:
-        - pgpool
+        - "pgpool"
   when: munin.node.plugins.pgpool == True
 
 # Postfix $#####################################################################
 - block:
     - name: set-plugins | Link munin-plugins(postfix)
       notify: Restart munin-node
-      file: >
-        src=/usr/share/munin/plugins/{{ item }}
-        dest=/etc/munin/plugins/{{ item }}
-        state=link
+      file:
+        src:   "/usr/share/munin/plugins/{{ item }}"
+        dest:  "/etc/munin/plugins/{{ item }}"
+        state: "link"
       with_items:
-        - postfix_mailqueue
-        - postfix_mailvolume
+        - "postfix_mailqueue"
+        - "postfix_mailvolume"
 
     - name: set-plugins | Deploy /etc/munin/plugin-conf.d/postfix
       notify: Restart munin-node
-      template: >
-        src=etc/munin/plugin-conf.d/{{ item }}.j2
-        dest=/etc/munin/plugin-conf.d/{{ item }}
-        backup=yes
+      template:
+        src:    "etc/munin/plugin-conf.d/{{ item }}.j2"
+        dest:   "/etc/munin/plugin-conf.d/{{ item }}"
+        backup: "yes"
       with_items:
-        - postfix
+        - "postfix"
   when: munin.node.plugins.postfix == True
 
 # PostgreSQL ###################################################################
 - block:
     - name: set-plugins | Link munin-plugins(postgres)
       notify: Restart munin-node
-      file: >
-        src=/usr/share/munin/plugins/{{ item }}
-        dest=/etc/munin/plugins/{{ item }}
-        state=link
+      file:
+        src:   "/usr/share/munin/plugins/{{ item }}"
+        dest:  "/etc/munin/plugins/{{ item }}"
+        state: "link"
       with_items:
-        - postgres_cache_
-        - postgres_checkpoints
-        - postgres_connections_db
-        - postgres_users
-        - postgres_xlog
+        - "postgres_cache_"
+        - "postgres_checkpoints"
+        - "postgres_connections_db"
+        - "postgres_users"
+        - "postgres_xlog"
 
     - name: set-plugins | Deploy /etc/munin/plugin-conf.d/postgres
       notify: Restart munin-node
-      template: >
-        src=etc/munin/plugin-conf.d/{{ item }}.j2
-        dest=/etc/munin/plugin-conf.d/{{ item }}
-        backup=yes
+      template:
+        src:    "etc/munin/plugin-conf.d/{{ item }}.j2"
+        dest:   "/etc/munin/plugin-conf.d/{{ item }}"
+        backup: "yes"
       with_items:
-        - postgres
+        - "postgres"
   when: munin.node.plugins.postgres == True
 
     
@@ -219,31 +220,31 @@
 - block:
     - name: set-plugins | Link munin-plugins(sendmail)
       notify: Restart munin-node
-      file: >
-        src=/usr/share/munin/plugins/{{ item }}
-        dest=/etc/munin/plugins/{{ item }}
-        state=link
+      file:
+        src:   "/usr/share/munin/plugins/{{ item }}"
+        dest:  "/etc/munin/plugins/{{ item }}"
+        state: "link"
       with_items:
-        - sendmail_mailqueue
-        - sendmail_mailstats
-        - sendmail_mailtraffic
+        - "sendmail_mailqueue"
+        - "sendmail_mailstats"
+        - "sendmail_mailtraffic"
 
     - name: set-plugins | Remove postfix plugins(sendmail)
       notify: Restart munin-node
-      file: >
-        path=/etc/munin/plugins/{{ item }}
-        state=absent
+      file:
+        path:  "/etc/munin/plugins/{{ item }}"
+        state: "absent"
       with_items:
-        - postfix_mailqueue
-        - postfix_mailvolume
+        - "postfix_mailqueue"
+        - "postfix_mailvolume"
 
     - name: set-plugins | Deploy /etc/munin/plugin-conf.d/sendmail
       notify: Restart munin-node
-      template: >
-        src=etc/munin/plugin-conf.d/{{ item }}.j2
-        dest=/etc/munin/plugin-conf.d/{{ item }}
-        backup=yes
+      template:
+        src:    "etc/munin/plugin-conf.d/{{ item }}.j2"
+        dest:   "/etc/munin/plugin-conf.d/{{ item }}"
+        backup: "yes"
       with_items:
-        - sendmail
+        - "sendmail"
   when: munin.node.plugins.sendmail == True
 

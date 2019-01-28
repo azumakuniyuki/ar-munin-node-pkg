@@ -6,5 +6,7 @@
 #                                                                                                        
 - name: Restart munin-node
   when: munin.node.started == True
-  service: name=munin-node state=restarted
+  service:
+    name:  "munin-node"
+    state: "restarted"
 

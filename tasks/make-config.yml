@@ -7,22 +7,22 @@
 # make-config
 - name: make-config | Deploy /etc/munin/munin-node config
   notify: Restart munin-node
-  template: >
-    src=etc/munin/munin-node.conf.j2
-    dest=/etc/munin/munin-node.conf
-    backup=yes
+  template:
+    src:    "etc/munin/munin-node.conf.j2"
+    dest:   "/etc/munin/munin-node.conf"
+    backup: "yes"
 
 - name: make-config | Deploy logrotate.d/munin-node
-  template: >
-    src=etc/logrotate.d/munin-node.j2
-    dest=/etc/logrotate.d/munin-node
-    backup=no
+  template:
+    src:    "etc/logrotate.d/munin-node.j2"
+    dest:   "/etc/logrotate.d/munin-node"
+    backup: "no"
 
 - name: make-config | Log directory should be created
-  file: >
-    path={{ munin.node.logdirectory }}
-    mode=0755
-    owner=munin
-    group=munin
-    state=directory
+  file:
+    path:  "{{ munin.node.logdirectory }}"
+    mode:  "0755"
+    owner: "munin"
+    group: "munin"
+    state: "directory"
 

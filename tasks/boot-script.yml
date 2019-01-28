@@ -7,17 +7,25 @@
 # boot-script
 - name: boot-script | Enable munin-node
   when: munin.node.enabled == True
-  service: name=munin-node enabled=yes
+  service:
+    name:    "munin-node"
+    enabled: "yes"
 
 - name: boot-script | Disable munin-node
   when: munin.node.enabled == False
-  service: name=munin-node enabled=no
+  service:
+    name:    "munin-node"
+    enabled: "no"
 
 - name: boot-script | Start munin-node
   when: munin.node.started == True
-  service: name=munin-node state=started
+  service:
+    name:  "munin-node"
+    state: "started"
 
 - name: boot-script | Stop munin-node
   when: munin.node.started == False
-  service: name=munin-node state=stopped
+  service:
+    name:  "munin-node"
+    state: "stopped"
 
