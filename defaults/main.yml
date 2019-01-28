@@ -9,8 +9,8 @@ munin:
     started: True
     enabled: True
     rebuild: False
-    workingdir: /usr/local/src
-    logdirectory: /var/log/munin
+    workingdir: "/usr/local/src"
+    logdirectory: "/var/log/munin"
     plugins:
       apache:   False
       bind9:    False
