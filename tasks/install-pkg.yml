@@ -22,7 +22,8 @@
 
 - name: install-pkg | Related Perl modules should be installed
   cpanm:
-    name: "{{ item }}"
+    name:       "{{ item }}"
+    executable: "/usr/local/bin/cpanm"
   with_items:
     - "LWP::UserAgent"
     - "IPC::Cmd"
