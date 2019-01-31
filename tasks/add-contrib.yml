@@ -1,0 +1,52 @@
+#                        _                             _       __      _       __     ___            _        
+#  _ __ ___  _   _ _ __ (_)_ __        _ __   ___   __| | ___ / /_ __ | | ____ \ \   / / |_ __ _ ___| | _____ 
+# | '_ ` _ \| | | | '_ \| | '_ \ _____| '_ \ / _ \ / _` |/ _ \ || '_ \| |/ / _` | | / /| __/ _` / __| |/ / __|
+# | | | | | | |_| | | | | | | | |_____| | | | (_) | (_| |  __/ || |_) |   < (_| | |/ / | || (_| \__ \   <\__ \
+# |_| |_| |_|\__,_|_| |_|_|_| |_|     |_| |_|\___/ \__,_|\___| || .__/|_|\_\__, | /_/   \__\__,_|___/_|\_\___/
+#                                                             \_\_|        |___/_/                            
+# add-contrib
+- name: add-contrib | munin-monitoring/contrib should be cloned
+  check_mode: "no"
+  git:
+    repo:  "https://github.com/munin-monitoring/contrib.git"
+    dest:  "/usr/local/share/munin-monitoring"
+    clone: "yes"
+    accept_hostkey: "yes"
+
+- name: add-contrib | Link contributed plugins(mail)
+  notify: Restart munin-node
+  file:
+    src:   "/usr/local/share/munin-monitoring/plugins/mail/{{ item }}"
+    dest:  "/etc/munin/plugins/{{ item }}"
+    state: "link"
+  with_items:
+    - "mail_connections"
+
+- name: add-contrib | Link contributed plugins(ssh)
+  notify: Restart munin-node
+  file:
+    src:   "/usr/local/share/munin-monitoring/plugins/ssh/{{ item }}"
+    dest:  "/etc/munin/plugins/{{ item }}"
+    state: "link"
+  with_items:
+    - "openssh-denyhosts"
+
+#  ____  
+# |  _ \ 
+# | |_) |
+# |  __/ 
+# |_|    
+#        
+# Postfix $#####################################################################
+- block:
+    - name: add-contrib | Link contributed plugins(postfix)
+      notify: Restart munin-node
+      file:
+        src:   "/usr/local/share/munin-monitoring/plugins/postfix/{{ item }}"
+        dest:  "/etc/munin/plugins/{{ item }}"
+        state: "link"
+      with_items:
+        - "postfix-queue-size"
+
+  when: munin.node.plugins.postfix == True
+

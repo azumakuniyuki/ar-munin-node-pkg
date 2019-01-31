@@ -7,6 +7,8 @@
 - include: install-pkg.yml
 - include: make-config.yml
 - include: set-plugins.yml
+- include: add-contrib.yml
+  when: munin.node.contrib == True
 - include: build-local.yml
 - include: boot-script.yml
 
