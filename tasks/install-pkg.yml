@@ -20,6 +20,18 @@
         - "munin-node"
   when: ansible_os_family == "RedHat"
 
+- name: install-pkg | cpanm shoudl be downloaded
+  get_url:
+    url:  "http://cpanmin.us/"
+    dest: "{{ munin.node.workingdir }}/cpanm"
+
+- name: install-pkg | /usr/local/bin/cpanm
+  shell: >
+    install -o root -m 0755 cpanm /usr/local/bin
+  args:
+    chdir:   "{{ munin.node.workingdir }}"
+    creates: "/usr/local/bin/cpanm"
+
 - name: install-pkg | Related Perl modules should be installed
   cpanm:
     name:       "{{ item }}"
