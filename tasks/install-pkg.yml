@@ -13,11 +13,9 @@
 
     - name: install-pkg | munin-node should be installed
       yum:
-        name:  "{{ item }}"
+        name:  "munin-node"
         state: "present"
         enablerepo: "epel"
-      with_items:
-        - "munin-node"
   when: ansible_os_family == "RedHat"
 
 - name: install-pkg | cpanm shoudl be downloaded
